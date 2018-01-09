@@ -198,7 +198,9 @@ public class OperationSupport {
   protected void handleDelete(URL requestUrl, long gracePeriodSeconds, boolean cascading) throws ExecutionException, InterruptedException, KubernetesClientException, IOException {
     RequestBody requestBody = null;
     DeleteOptions deleteOptions = new DeleteOptions();
-    deleteOptions.setOrphanDependents(!cascading);
+    if (cascading) {
+      deleteOptions.setPropagationPolicy("Foreground");
+    }
     if (gracePeriodSeconds >= 0) {
       deleteOptions.setGracePeriodSeconds(gracePeriodSeconds);
     }
